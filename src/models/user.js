@@ -20,7 +20,7 @@ User.findByEmail = async (email) => {
 };
 
 // Create a new user
-User.create = async (name, email, password, phone, dob) => {
+User.create = async (name, email, password, phone, dob, riskprofile) => {
 	try {
 		const pool = await poolPromise;
 		await pool
@@ -29,9 +29,10 @@ User.create = async (name, email, password, phone, dob) => {
 			.input("email", sql.VarChar, email)
 			.input("password", sql.VarChar, password) // Storing plain text as per the current requirement
 			.input("phone", sql.VarChar, phone)
-			.input("dob", sql.Date, dob).query(`
-          INSERT INTO [User] (UserName, UserEmail, UserPassword, UserContact, DateOfBirth)
-          VALUES (@name, @email, @password, @phone, @dob)
+			.input("dob", sql.Date, dob)
+            .input("riskprofile", sql.VarChar, riskprofile).query(`
+          INSERT INTO [User] (UserName, UserEmail, UserPassword, UserContact, DateOfBirth, RiskProfile)
+          VALUES (@name, @email, @password, @phone, @dob, @riskprofile)
         `);
 	} catch (error) {
 		console.error("Database insertion failed:", error.message);

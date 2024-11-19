@@ -35,7 +35,7 @@ authController.loginUser = async (req, res) => {
 
 // Signup function
 authController.signupUser = async (req, res) => {
-    const { name, email, newpassword, phone, dob } = req.body;
+    const { name, email, newpassword, phone, dob, riskprofile } = req.body;
   
     if (!name || !email || !newpassword || !phone || !dob) {
       return res.status(400).json({ error: 'All fields are required.' });
@@ -50,7 +50,7 @@ authController.signupUser = async (req, res) => {
       }
   
       // Create a new user
-      await User.create(name, email, newpassword, phone, dob);
+      await User.create(name, email, newpassword, phone, dob, riskprofile);
   
       // Generate a JWT token
       const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
