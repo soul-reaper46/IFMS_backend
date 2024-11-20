@@ -30,7 +30,7 @@ User.create = async (name, email, password, phone, dob, riskprofile) => {
 			.input("password", sql.VarChar, password) // Storing plain text as per the current requirement
 			.input("phone", sql.VarChar, phone)
 			.input("dob", sql.Date, dob)
-            .input("riskprofile", sql.VarChar, riskprofile).query(`
+			.input("riskprofile", sql.VarChar, riskprofile).query(`
           INSERT INTO [User] (UserName, UserEmail, UserPassword, UserContact, DateOfBirth, RiskProfile)
           VALUES (@name, @email, @password, @phone, @dob, @riskprofile)
         `);
@@ -81,6 +81,195 @@ User.updateDetailsByEmail = async (
 	} catch (error) {
 		console.error("Database update failed:", error.message);
 		throw new Error("Database update failed");
+	}
+};
+
+// Get all records from BenchmarkIndex table
+User.getBenchmarkIndex = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM BenchmarkIndex");
+		return result.recordset; // Return all records from BenchmarkIndex
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from AllocationStrategy table
+User.getAllocationStrategy = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM AllocationStrategy");
+		return result.recordset; // Return all records from AllocationStrategy
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from Watchlist table
+User.getWatchlist = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM Watchlist");
+		return result.recordset; // Return all records from Watchlist
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from Transaction table
+User.getTransactions = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM [Transaction]");
+		return result.recordset; // Return all records from Transaction
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from PerformanceReport table
+User.getPerformanceReports = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM PerformanceReport");
+		return result.recordset; // Return all records from PerformanceReport
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from RiskAssessment table
+User.getRiskAssessments = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM RiskAssessment");
+		return result.recordset; // Return all records from RiskAssessment
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from Assets table
+User.getAssets = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM Assets");
+		return result.recordset; // Return all records from Assets
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from Portfolio table
+User.getPortfolios = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM Portfolio");
+		return result.recordset; // Return all records from Portfolio
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Get all records from Funds table
+User.getFunds = async () => {
+	try {
+		const pool = await poolPromise;
+		const result = await pool
+			.request()
+			.query("SELECT * FROM Funds");
+		return result.recordset; // Return all records from Funds
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Update the details of a specific fund by FundID
+User.updateFundDetails = async (FundID, FundName, FundType, StrategyID) => {
+	try {
+		const pool = await poolPromise;
+
+		const result = await pool
+			.request()
+			.input("FundID", sql.Int, FundID)
+			.input("FundName", sql.NVarChar(100), FundName)
+			.input("FundType", sql.NVarChar(50), FundType)
+			.input("StrategyID", sql.Int, StrategyID).query(`
+          UPDATE Funds
+          SET FundName = @FundName, FundType = @FundType, StrategyID = @StrategyID
+          WHERE FundID = @FundID
+        `);
+
+		return result.rowsAffected[0]; // Returns the number of affected rows
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Insert a new fund into the Funds table
+User.insertFundDetails = async (FundName, FundType, StrategyID) => {
+	try {
+		const pool = await poolPromise;
+
+		const result = await pool
+			.request()
+			.input("FundName", sql.NVarChar(100), FundName)
+			.input("FundType", sql.NVarChar(50), FundType)
+			.input("StrategyID", sql.Int, StrategyID).query(`
+          INSERT INTO Funds (FundName, FundType, StrategyID)
+          VALUES (@FundName, @FundType, @StrategyID);
+        `);
+
+		return result.rowsAffected[0]; // Returns the number of affected rows
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
+	}
+};
+
+// Delete a risk assessment record by AssessmentID
+User.deleteRiskAssessment = async (assessmentID) => {
+	try {
+		const pool = await poolPromise;
+
+		const result = await pool
+			.request()
+			.input("AssessmentID", sql.Int, assessmentID).query(`
+          DELETE FROM RiskAssessment
+          WHERE AssessmentID = @AssessmentID;
+        `);
+
+		return result.rowsAffected[0]; // Returns the number of affected rows
+	} catch (error) {
+		console.error("Database query failed:", error.message);
+		throw new Error("Database query failed");
 	}
 };
 
